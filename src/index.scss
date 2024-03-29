@@ -1,0 +1,63 @@
+$background: #ffffff;
+$blue: #006ac6;
+$yellow: #fab700;
+$grey: #75787b;
+body {
+    background-color: $background;
+}
+#storeName,#country, #city,#location, #area{
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+        }
+form {
+    display: flex;
+    flex-direction: column;
+div {
+    margin-bottom: 10px;
+label {
+    font-weight: bold;
+    display: flex;
+        } }
+button {
+        background-color: $blue;
+        color: $background;
+        border: none;
+        width: 80px;
+        font-size: 16px;
+    } }
+.table-latitude {
+    width: 50%;
+    caption {
+        text-transform: uppercase;
+        font-weight: bold;
+        color: $yellow;
+        text-align: center;
+    }
+    thead {
+        border-top: 2px solid $yellow;
+        border-bottom: 2px solid $yellow;
+        th {
+            text-transform: uppercase;
+            text-align: center;
+            padding: 10px;
+            color: $blue;
+            border: 1px solid #F1F1F1;
+        }
+    }
+    tbody {
+        tr {
+            border-bottom: 1px solid #F1F1F1;
+            color: $grey;
+            td {
+                padding: 10px;
+                text-align: center;
+                border: 1px solid #F1F1F1;
+            }
+            th {
+                padding-left: 10px;
+                border: 1px solid #F1F1F1;
+            }
+        }
+    }
+}
