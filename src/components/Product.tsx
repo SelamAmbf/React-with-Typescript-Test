@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import "../css/index.css";
-//import '../styles/createStore.scss';
 import { insertDatabase } from '../redux/actions/productActions';
 import { useDispatch, useSelector } from 'react-redux';
 const Store: React.FC = () => {
@@ -72,41 +71,45 @@ storeName,city,country,location
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="storeName">STORE NAME</label>
-          <input
+          <input placeholder="Store Name"
             type="text"
             id="storeName"
             value={storeName}
             onChange={(e) => setStoreName(e.target.value)}
-
+            required
           />
         </div>
         <div>
           <label htmlFor="country">COUNTRY</label>
           <input
+          placeholder ="Country"
             type="text"
             id="country"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
-
+            required
           />
         </div>
         <div>
           <label htmlFor="city">CITY</label>
           <input
+          placeholder ="City"
             type="text"
             id="city"
             value={city}
             onChange={(e) => setCity(e.target.value)}
-
+            required
           />
         </div>
         <div>
           <label htmlFor="location">LOCATION</label>
           <input
+          placeholder="Location"
             type="text"
             id="location"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
+            required
           />
         </div>
         
@@ -119,16 +122,19 @@ storeName,city,country,location
             <th>Country</th>
             <th>City</th>
             <th>Location</th>
-           
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {stores.map((store: any, index: number) => (
-            <tr key={index}>
+          {stores.map((store: any) => (
+            <tr>
               <td>{store.storeName}</td>
               <td>{store.country}</td>
               <td>{store.city}</td>
               <td>{store.location}</td>
+              <td><button id="edit"type="button">Edit</button>
+              &nbsp;
+              <button id="delete" type="button">Delete</button></td>
             </tr>
           ))}
         </tbody>

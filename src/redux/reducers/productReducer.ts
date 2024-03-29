@@ -7,7 +7,6 @@ const initialState = {
         country: '',
         city: '',
         location: '',
-        area: ''
     },
 ],
 };
