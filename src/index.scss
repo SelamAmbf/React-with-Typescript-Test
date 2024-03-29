@@ -7,7 +7,7 @@ body {
 }
 #storeName,#country, #city,#location, #area{
     padding: 5px;
-    border: 1px solid #ccc;
+    border: $yellow 1px solid ;
     border-radius: 4px;
         }
 form {
@@ -35,28 +35,21 @@ button {
         text-align: center;
     }
     thead {
-        border-top: 2px solid $yellow;
-        border-bottom: 2px solid $yellow;
         th {
             text-transform: uppercase;
             text-align: center;
             padding: 10px;
             color: $blue;
-            border: 1px solid #F1F1F1;
+            border: 1px solid $grey;
         }
     }
     tbody {
         tr {
-            border-bottom: 1px solid #F1F1F1;
-            color: $grey;
             td {
+                color: $grey;
                 padding: 10px;
                 text-align: center;
-                border: 1px solid #F1F1F1;
-            }
-            th {
-                padding-left: 10px;
-                border: 1px solid #F1F1F1;
+                border: 1px solid $grey;
             }
         }
     }
