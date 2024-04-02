@@ -1,6 +1,6 @@
-import Store from './components/Product';
+import StoreForm from './components/createStore';
 import { Provider } from 'react-redux';
-import  store  from './redux/store';
+import  store  from './state/store';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <h4>Please insert information about store</h4>
     </div>
     <div>
-      <Store />
+      <StoreForm />
       </div></></Provider>
   );
 }

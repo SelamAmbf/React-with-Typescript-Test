@@ -19,13 +19,11 @@ label {
     font-weight: bold;
     display: flex;
         } }
-button {
-        background-color: $blue;
-        color: $background;
-        border: none;
-        width: 80px;
-        font-size: 16px;
-    } }
+} 
+#button {
+    width: 75px;
+    margin: 5px;
+} 
 .table-latitude {
     width: 50%;
     caption {

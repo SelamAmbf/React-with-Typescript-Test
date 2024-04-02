@@ -19,10 +19,12 @@ form div label {
   font-weight: bold;
   display: flex;
 }
-
-#button {
-  width: 75px;
-  margin: 5px;
+form button {
+  background-color: #006ac6;
+  color: #ffffff;
+  border: none;
+  width: 80px;
+  font-size: 16px;
 }
 
 .table-latitude {
@@ -46,4 +48,4 @@ form div label {
   padding: 10px;
   text-align: center;
   border: 1px solid #75787b;
-}
+}/*# sourceMappingURL=index.css.map */
