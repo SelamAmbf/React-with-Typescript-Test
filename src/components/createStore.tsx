@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dispatch } from 'redux';
 import {useSelector, useDispatch, ConnectedProps,connect } from 'react-redux';
-import { insertDatabase, deleteData, stores, updateData, searchData } from '../state/actions/productActions';
+import { insertDatabase, deleteData, stores, updateData, searchData } from '../state/actions/actionStore';
 import { addStore,addProduct, deleteStore, deleteProducts, updateStore, updateProducts, searchProducts,searchStore } from '../state/action Creator/storeAction';
 import "../css/index.css";
 import Api from '../state/action Creator/Api';
