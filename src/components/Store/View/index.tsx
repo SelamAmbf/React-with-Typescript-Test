@@ -4,7 +4,8 @@ import * as actionCreators from "../../../state/action Creator/storeAction";
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import CreateStore from "../Create";
-import { Button } from "@mui/material";
+import { Button, Card, Grid, Paper } from "@mui/material";
+import Dropdown from 'antd/es/dropdown/dropdown';
 
 interface STORES {
     id: number;
@@ -103,17 +104,9 @@ const Stores = ({ ...props }) => {
       ];
       return (
         <div className="appcontainer">
-          {userStorageService.currentUserPermission("View Proposal Type") === true && (
-    
+         
           <Grid container spacing={0}>
-            <div className="row">
-              <div className="pull-right">
-                {/* BreadCrumpdata */}
-                <Paper elevation={8} className="breadcrump">
-                  <BreadCrumb data={breadcrumpdata} />
-                </Paper>
-              </div>
-            </div>
+            
     
             <Grid item xs={12} sm={12}>
               <Paper elevation={8} className="viewholder">
@@ -128,9 +121,7 @@ const Stores = ({ ...props }) => {
                   {viewMode == "list" && (
                       <>
                         <div className="pull-right viewbut">
-                          {userStorageService.currentUserPermission(
-                            "Create Proposal Type"
-                          ) && (
+ && (
                             <Button
                               variant="contained"
                               startIcon={<AddIcon />}
@@ -158,33 +149,6 @@ const Stores = ({ ...props }) => {
                     )} 
                 </div>
     
-                {viewMode === "list" && selectedRowKeys.length > 0 && (
-                  <div className="delete-container">
-                {userStorageService.currentUserPermission(
-                  "Delete Proposal Type") && (
-                    
-                    <div>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => {
-                          setConfirmDialog({
-                            isOpen: true,
-                            title: "Are you sure to delete",
-                           
-                            //@ts-expect-error
-                            onConfirm: () => {
-                              onTrashDelete();
-                            },
-                          });
-                        }}
-                      >
-                        Trash
-                      </Button>
-                    </div>
-                    )}
-                  </div>
-                )}
                 <div
                   className="ag-theme-alpine flex"
                   style={{ height: "500px", width: "100%" }}
@@ -196,70 +160,14 @@ const Stores = ({ ...props }) => {
                           {/* export  */}
                           <div className="pull-left actionbut">
                             <Dropdown
-                              overlay={menu}
+                              
                               placement="bottom"
                               arrow={{ pointAtCenter: true }}
                             >
                               <Button size="small" variant="contained">
                                 <div className="font-medium">Export</div>
-                                <DownOutlined
-                                  translate={undefined}
-                                  style={{ marginLeft: "2px" }}
-                                />
                               </Button>
                             </Dropdown>
-    
-                            <Modal
-                                aria-labelledby="transition-modal-title"
-                                aria-describedby="transition-modal-description"
-                                open={open}
-                                onClose={handleClose}
-                                closeAfterTransition
-                                BackdropComponent={Backdrop}
-                                BackdropProps={{
-                                  timeout: 500,
-                                }}
-                              >
-                                <Fade in={open}>
-                                  <Box sx={style}>
-                                    <Typography
-                                      id="transition-modal-title"
-                                      variant="h6"
-                                      component="h2"
-                                    >
-                                      <Button
-                                        size="small"
-                                        variant="contained"
-                                        onClick={PermissionCategoryPrintAction}
-                                      >
-                                        Print
-                                      </Button>
-                                      <Button
-                                        size="small"
-                                        className="ml-4"
-                                        variant="contained"
-                                        color="error"
-                                        onClick={handleClose}
-                                      >
-                                        Cancel
-                                      </Button>
-                                    </Typography>
-                                    <Typography
-                                      id="transition-modal-description"
-                                      sx={{ mt: 2 }}
-                                    >
-                                      <Table
-                                        ref={componentRef}
-                                        rowKey={(obj) => obj.id}
-                                        size="small"
-                                        dataSource={dataSource}
-                                        columns={columnsListForPrint}
-                                        pagination={false}
-                                      />
-                                    </Typography>
-                                  </Box>
-                                </Fade>
-                              </Modal>
                           </div>
     
                           {/* search and filter  */}
@@ -284,12 +192,9 @@ const Stores = ({ ...props }) => {
                           dataSource={dataSource}
                           columns={columnsList}
                           pagination={{
-                            pageSize: pageSize,
+                           
                             total: props.total,
                             onChange: (pageNumber: any, pageSize: any) => {
-                              setPageNumber(pageNumber);
-                              setPageSize(pageSize);
-                              onPagination(pageNumber, pageSize);
                             },
                             defaultPageSize: 5,
                           }}
@@ -300,7 +205,7 @@ const Stores = ({ ...props }) => {
                   )}
                   {viewMode === "new" && (
                     <div style={{ width: "100%" }}>
-                      <CreateProposalType
+                      <CreateStore
                         //@ts-ignore
                         closeedit={() => setViewMode("list")}
                         viewMode={viewMode}
@@ -311,11 +216,11 @@ const Stores = ({ ...props }) => {
     
                   {viewMode === "edit" && (
                     <div style={{ width: "100%" }}>
-                      <CreateProposalType
+                      <CreateStore
                         //@ts-ignore
                         closeedit={() => setViewMode("list")}
                         viewMode={viewMode}
-                        selectedProposalType={selectedProposalType}
+                        selectedStore={selectedStore}
                       />
                     </div>
                   )}
@@ -325,9 +230,9 @@ const Stores = ({ ...props }) => {
     
             </Grid>
           </Grid>
-          )}
+        
         </div>
-      );
+      
     };
     
     const mapStateToProps = (state: any) => ({

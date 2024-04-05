@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
 import * as actionCreators from "../../../state/action Creator/storeAction";
 import * as Yup from "yup";
-import { useFormik } from 'formik';
+import { ErrorMessage, useFormik } from 'formik';
 interface STORES {
     id: number;
     storeName: string;
@@ -23,15 +23,19 @@ const initialFieldValues: STORES = {
 
 const CreateStore = ({...props}) => {
     const [viewMode, setViewMode] = useState("new");
+    const [selectedStore, setselectedStore] = useState<any>(
+      props.selectedStore
+    );
     console.log("Current viewModessss:", viewMode);
     useEffect(() =>{
         setViewMode(props.viewMode);
+        setselectedStore(props.selectedStore);
         if (props.viewMode == "new") {
           formik.resetForm({
             values: initialFieldValues,
           });
         }
-    },[props.viewMode]);
+    },[props.viewMode,props.selectedStore]);
     
       const stringRegExp = /^[a-zA-Z_&-_ ]*$/;
       const validationSchema = Yup.object().shape({
@@ -80,26 +84,35 @@ const CreateStore = ({...props}) => {
           type: "error",
         });
       };
-      const onSubmit = (values: STORES) => {
-        console.log("Form submitted with values:", values);
-        console.log("Current viewMode:", viewMode);
-        if (viewMode === 'new') {
-          // Check if the id is new or exists
-          const existingStore = props.storestates.find((store: STORES) => store.id === values.id);
-          console.log("Current existingMo:", existingStore);
-          if (existingStore) {
-            onCreateError('Store with the same ID already exists.');
-          } else {
-            props.createStore(values);
-            onCreateSuccess();
-          }
-        } 
-      };
-    
+      // const onSubmit = (values: STORES) => {
+      //   console.log("Form submitted with values:", values);
+      //   console.log("Current viewMode:", viewMode);
+      //   if (viewMode === 'new') {
+      //     // Check if the id is new or exists
+      //     const existingStore = props.storestates.find((store: STORES) => store.id === values.id);
+      //     console.log("Current existingMo:", existingStore);
+      //     if (existingStore) {
+      //       onCreateError('Store with the same ID already exists.');
+      //     } else {
+      //       props.createStore(values);
+      //       onCreateSuccess();
+      //     }
+      //   } 
+      // };
       const formik = useFormik({
-        initialValues: initialFieldValues,
-        onSubmit,
-        validationSchema: validationSchema,
+        initialValues: selectedStore,
+        onSubmit: (values) => {
+          if (props.viewMode === "new")
+            props.createProposalType(values, onCreateSuccess, onCreateError);
+          else
+              props.updateProposalType(
+                selectedStore.id,
+                values,
+                onUpdateSuccess,
+                onUpdateError
+              );
+        },
+         validationSchema: validationSchema,
       });
     
         
@@ -112,32 +125,31 @@ const CreateStore = ({...props}) => {
         name="storeName" 
         value={formik.values.storeName} 
         onChange={formik.handleChange} />
-        {formik.touched.storeName && formik.errors.storeName ? ( 
-        <div>{formik.errors.storeName}</div>):null}
+        <ErrorMessage name="storeName" component="div" />
       </div>
 
       <div>
         <label>Store Description</label>
         <input type="text" id="storeDescription" name="storeDescription" onChange={formik.handleChange} value={formik.values.storeDescription} />
-        {formik.touched.storeDescription && formik.errors.storeDescription && <div>{formik.errors.storeDescription}</div>}
+        <ErrorMessage name="storeDescription" component="div" />
       </div>
       
       <div>
         <label>Store Country</label>
         <input type="text" id="storeCountry" name="storeCountry" onChange={formik.handleChange} value={formik.values.storeCountry} />
-        {formik.touched.storeCountry && formik.errors.storeCountry && <div>{formik.errors.storeCountry}</div>}
+        <ErrorMessage name="storeCountry" component="div" />
       </div>
       
       <div>
         <label>Store City</label>
         <input type="text" id="storeCity" name="storeCity" onChange={formik.handleChange} value={formik.values.storeCity} />
-        {formik.touched.storeCity && formik.errors.storeCity && <div>{formik.errors.storeCity}</div>}
+        <ErrorMessage name="storeCity" component="div" />
       </div>
       
       <div>
         <label>Store Location</label>
         <input type="text" id="storeLocation" name="storeLocation" onChange={formik.handleChange} value={formik.values.storeLocation} />
-        {formik.touched.storeLocation && formik.errors.storeLocation && <div>{formik.errors.storeLocation}</div>}
+        <ErrorMessage name="storeLocation" component="div" />
       </div>
       <button type="submit">Submit</button>
     </form>
