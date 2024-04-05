@@ -320,54 +320,23 @@ const Stores = ({ ...props }) => {
                     </div>
                   )}
     
-                  {viewMode === "detail" && (
-                    <div style={{ width: "100%" }}>
-                      <DetailProposalType
-                        //@ts-ignore
-                        closeedit={() => setViewMode("list")}
-                        viewMode={viewMode}
-                        selectedProposalType={selectedProposalType}
-                      />
-                    </div>
-                  )}
-                  {viewMode === "recover" && (
-                    <div style={{ width: "100%" }}>
-                      <Recevory
-                        //@ts-ignore
-                        closeedit={() => setViewMode("list")}
-                        viewMode="recover"
-                      />
-                    </div>
-                  )}
                 </div>
               </Paper>
     
-              <Notification notify={notify} setNotify={setNotify} />
-    
-              <Controls.ConfirmationDialog
-                confirmDialog={confirmDialog}
-                setConfirmDialog={setConfirmDialog}
-              />
             </Grid>
           </Grid>
           )}
-    
-          {userStorageService.currentUserPermission("View Proposal Type") === false &&
-            navigate("/unauthorizedPrivilage")}
         </div>
       );
     };
     
     const mapStateToProps = (state: any) => ({
-     proposaltypestate: state.PROPOSALTYPE_REDUCER.proposaltypestate,
-      loading: state.PROPOSALTYPE_REDUCER.loading,
-      total: state.PROPOSALTYPE_REDUCER.total,
+     storestates: state.STORE_REDUCER.storestates,
     });
     
     const mapActionsToProps = {
       deleteProposalType: actionCreators.Delete,
       fetchAllProposalType: actionCreators.fetchAll,
-      MultiSoftDeleteProposalType: actionCreators.multiSoftDelete,
     };
-    export default connect(mapStateToProps, mapActionsToProps)(ProposalType as any);
+    export default connect(mapStateToProps, mapActionsToProps)(Stores as any);
     

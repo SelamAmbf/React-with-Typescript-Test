@@ -44,3 +44,60 @@ export const create =(data: STORE_STATE, onSucess: any, onCreateError: any) =>
         }
     });
 };
+export const fetchAll =
+  (onSuccess: any, onFetchAllError: any, request: any) =>
+  (useAuthDispatch: Dispatch<ACTION_STORE>) => {
+    storeApi()
+      .fetchAll(request)
+      .then((response) => {
+        const data = response.data;
+        useAuthDispatch({
+          type: STORE_ActionType.VIEW_STORE,
+          payload: [data],
+        });
+        onSuccess();
+      })
+      .catch((err: any) => {
+        return onFetchAllError(err.message);
+      });
+  };
+  export const update =
+  (id: any, data: STORE_STATE, onSuccess: any, onUpdateError: any) =>
+  (useAuthDispatch: Dispatch<ACTION_STORE>) => {
+    storeApi()
+      .update(id, data)
+      .then((response) => {
+        useAuthDispatch({
+          type: STORE_ActionType.UPDATE_STORE,
+          payload: [id, response.data],
+        });
+        onSuccess();
+      })
+      .catch((err) => {
+        if (err.response != undefined || null) {
+          return onUpdateError(err.response.data.message);
+        } else {
+          return onUpdateError(err.message);
+        }
+      });
+  };
+
+export const Delete =
+  (id: any, onSuccess: any, onDeleteerror: any) =>
+  (useAuthDispatch: Dispatch<ACTION_STORE>) => {
+    storeApi()
+      .delete(id)
+      .then((response) => {
+        console.log(response);
+        useAuthDispatch({
+          type: STORE_ActionType.DELETE_STORE,
+          payload: [id],
+        });
+        onSuccess();
+      })
+      .catch((err: any) => {
+        return onDeleteerror(err.message);
+      });
+  };
+
+
