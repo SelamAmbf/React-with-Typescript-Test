@@ -3,7 +3,7 @@ import { STORE_STATE } from "../state/actions/actionStore";
 import * as STORE_REDUCER from "../state/reducers/storeReducer";
 export interface AllStates {
     STORE_STATE: STORE_STATE;
-    PRODUCT_STATE: PRODUCT_STATE;
+    //PRODUCT_STATE: PRODUCT_STATE;
 }
 
 export const reducers = {
