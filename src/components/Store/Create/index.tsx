@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
 import * as actionCreators from "../../../state/action Creator/storeAction";
 import * as Yup from "yup";
-import { ErrorMessage, useFormik } from 'formik';
+import { useFormik } from 'formik';
+import "../../../css/index.css"
+import Button from '@mui/material/Button';
 interface STORES {
     id: number;
     storeName: string;
@@ -17,8 +19,9 @@ const initialFieldValues: STORES = {
         storeName: "",
         storeDescription: "",
         storeCountry: "",
-        storeLocation: "",
         storeCity: "",
+        storeLocation: "",
+        
 };
 
 const CreateStore = ({...props}) => {
@@ -26,7 +29,6 @@ const CreateStore = ({...props}) => {
     const [selectedStore, setselectedStore] = useState<any>(
       props.selectedStore
     );
-    console.log("Current viewModessss:", viewMode);
     useEffect(() =>{
         setViewMode(props.viewMode);
         setselectedStore(props.selectedStore);
@@ -40,10 +42,10 @@ const CreateStore = ({...props}) => {
       const stringRegExp = /^[a-zA-Z_&-_ ]*$/;
       const validationSchema = Yup.object().shape({
         storeName: Yup.string().required("Store name is required").matches(stringRegExp, "Please insert the correct input"),
-        storeDescription: Yup.string().required('Store description is required'),
-        storeCountry: Yup.string().required('Store country is required'),
-        storeCity: Yup.string().required('Store city is required'),
-        storeLocation: Yup.string().required('Store location is required'),
+        storeDescription: Yup.string().required('Store description is required').matches(stringRegExp, "Please insert the correct input"),
+        storeCountry: Yup.string().required('Store country is required').matches(stringRegExp, "Please insert the correct input"),
+        storeCity: Yup.string().required('Store city is required').matches(stringRegExp, "Please insert the correct input"),
+        storeLocation: Yup.string().required('Store location is required').matches(stringRegExp, "Please insert the correct input"),
     });
     const [notify, setNotify] = useState({
         isOpen: false,
@@ -84,28 +86,15 @@ const CreateStore = ({...props}) => {
           type: "error",
         });
       };
-      // const onSubmit = (values: STORES) => {
-      //   console.log("Form submitted with values:", values);
-      //   console.log("Current viewMode:", viewMode);
-      //   if (viewMode === 'new') {
-      //     // Check if the id is new or exists
-      //     const existingStore = props.storestates.find((store: STORES) => store.id === values.id);
-      //     console.log("Current existingMo:", existingStore);
-      //     if (existingStore) {
-      //       onCreateError('Store with the same ID already exists.');
-      //     } else {
-      //       props.createStore(values);
-      //       onCreateSuccess();
-      //     }
-      //   } 
-      // };
       const formik = useFormik({
-        initialValues: selectedStore,
+        initialValues: selectedStore || initialFieldValues,
         onSubmit: (values) => {
+          console.log("Form submitted with values:", values);
+          console.log("Current viewMode:", viewMode);
           if (props.viewMode === "new")
-            props.createProposalType(values, onCreateSuccess, onCreateError);
+            props.createStore(values, onCreateSuccess, onCreateError);
           else
-              props.updateProposalType(
+              props.updateStore(
                 selectedStore.id,
                 values,
                 onUpdateSuccess,
@@ -120,38 +109,45 @@ const CreateStore = ({...props}) => {
     <form onSubmit={formik.handleSubmit}>
       <div>
         <label>Store Name</label>
-        <input type="text" 
-        id="storeName" 
-        name="storeName" 
-        value={formik.values.storeName} 
-        onChange={formik.handleChange} />
-        <ErrorMessage name="storeName" component="div" />
+        <input type="text" id="storeName"  {...formik.getFieldProps('storeName')} placeholder="Store Name" />
+        {formik.touched.storeName && typeof formik.errors.storeName === 'string' && (
+        <div className="error">{formik.errors.storeName}</div>
+        )}
       </div>
-
+      
       <div>
         <label>Store Description</label>
-        <input type="text" id="storeDescription" name="storeDescription" onChange={formik.handleChange} value={formik.values.storeDescription} />
-        <ErrorMessage name="storeDescription" component="div" />
+<input type="text"  id="description" {...formik.getFieldProps('storeDescription')} placeholder="Store Description" />
+        {formik.touched.storeDescription && typeof formik.errors.storeDescription === 'string' && (
+        <div className="error">{formik.errors.storeDescription}</div>
+        )}
       </div>
       
       <div>
         <label>Store Country</label>
-        <input type="text" id="storeCountry" name="storeCountry" onChange={formik.handleChange} value={formik.values.storeCountry} />
-        <ErrorMessage name="storeCountry" component="div" />
+        <input type="text"  id="country" {...formik.getFieldProps('storeCountry')} placeholder="Store Country" />
+        {formik.touched.storeCountry && typeof formik.errors.storeCountry === 'string' && (
+        <div className="error">{formik.errors.storeCountry}</div>
+        )}
       </div>
       
       <div>
         <label>Store City</label>
-        <input type="text" id="storeCity" name="storeCity" onChange={formik.handleChange} value={formik.values.storeCity} />
-        <ErrorMessage name="storeCity" component="div" />
+        <input type="text"  id="city" {...formik.getFieldProps('storeCity')} placeholder="Store City" />
+        {formik.touched.storeCity && typeof formik.errors.storeCity === 'string' && (
+        <div className="error">{formik.errors.storeCity}</div>
+        )}
       </div>
       
       <div>
         <label>Store Location</label>
-        <input type="text" id="storeLocation" name="storeLocation" onChange={formik.handleChange} value={formik.values.storeLocation} />
-        <ErrorMessage name="storeLocation" component="div" />
+        <input type="text" id="location" {...formik.getFieldProps('storeLocation')} placeholder="Store Location" />
+        {formik.touched.storeLocation && typeof formik.errors.storeLocation === 'string' && (
+        <div className="error">{formik.errors.storeLocation}</div>
+        )}
       </div>
-      <button type="submit">Submit</button>
+      <Button type="submit" id="button" variant="contained" color="success">
+      Submit</Button>
     </form>
   );
 };

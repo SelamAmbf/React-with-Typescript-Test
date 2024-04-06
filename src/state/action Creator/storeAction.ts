@@ -45,20 +45,31 @@ export const create =(data: STORE_STATE, onSucess: any, onCreateError: any) =>
     });
 };
 export const fetchAll =
-  (onSuccess: any, onFetchAllError: any, request: any) =>
-  (useAuthDispatch: Dispatch<ACTION_STORE>) => {
+  () => (useAuthDispatch: Dispatch<ACTION_STORE>) => {
     storeApi()
-      .fetchAll(request)
+      .fetchAll()
       .then((response) => {
-        const data = response.data;
+        const data = response.data
         useAuthDispatch({
           type: STORE_ActionType.VIEW_STORE,
           payload: [data],
         });
+      });
+  };
+  export const fetchById =
+  (id: any, onSuccess: any, onFetchByIderror: any) =>
+  (useAuthDispatch: Dispatch<ACTION_STORE>) => {
+    storeApi()
+      .fetchById(id)
+      .then((response) => {
+        useAuthDispatch({
+          type: STORE_ActionType.FETCH_BY_ID_STORE,
+          payload: [id],
+        });
         onSuccess();
       })
       .catch((err: any) => {
-        return onFetchAllError(err.message);
+        return onFetchByIderror(err.message);
       });
   };
   export const update =
@@ -82,22 +93,22 @@ export const fetchAll =
       });
   };
 
-export const Delete =
-  (id: any, onSuccess: any, onDeleteerror: any) =>
-  (useAuthDispatch: Dispatch<ACTION_STORE>) => {
-    storeApi()
-      .delete(id)
-      .then((response) => {
-        console.log(response);
-        useAuthDispatch({
-          type: STORE_ActionType.DELETE_STORE,
-          payload: [id],
-        });
-        onSuccess();
-      })
-      .catch((err: any) => {
-        return onDeleteerror(err.message);
-      });
-  };
+// export const Delete =
+//   (id: any, onSuccess: any, onDeleteerror: any) =>
+//   (useAuthDispatch: Dispatch<ACTION_STORE>) => {
+//     storeApi()
+//       .delete(id)
+//       .then((response) => {
+//         console.log(response);
+//         useAuthDispatch({
+//           type: STORE_ActionType.DELETE_STORE,
+//           payload: [id],
+//         });
+//         onSuccess();
+//       })
+//       .catch((err: any) => {
+//         return onDeleteerror(err.message);
+//       });
+//   };
 
 

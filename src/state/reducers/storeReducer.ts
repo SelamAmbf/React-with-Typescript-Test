@@ -2,7 +2,8 @@ import { STORE_ActionType } from "../actionType/action-types";
 import { ACTION_STORE, STORE_STATE } from "../actions/actionStore"
 
 const initialState = {
-    storestates: []
+    storestates: [],
+    //total:0
 };
 
 export const STORE_REDUCER = (
@@ -13,9 +14,23 @@ export const STORE_REDUCER = (
         case STORE_ActionType.ADD_STORE:
             return {
                 ...state,
-                storestate: [...state.storestates, action.payload],
+                storestates: [...state.storestates, action.payload],
             };
-            default:
-                return state;
+        case STORE_ActionType.FETCH_BY_ID_STORE:
+            return {
+                  ...state,
+                  storestates: action.payload,
+                };
+        case STORE_ActionType.VIEW_STORE:
+            return {
+                
+                  ...state,
+                  storestates: action.payload[0],
+                  //total:action.payload[1]
+                };
+        default:
+            return state;
+                
     }
+
 };

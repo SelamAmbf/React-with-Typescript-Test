@@ -1,13 +1,13 @@
 import axios from "axios"
 import { STORE_STATE } from "../actions/actionStore"
 import { appUrl } from "../../AppURL";
-export const storeApi = (url: string = appUrl + "/") => {
+export const storeApi = (url: string = appUrl + "store") => {
     return{
    create: ( newStore: STORE_STATE) =>
-    axios.post(url + "/store", newStore),
+    axios.post(url , newStore),
 
-   fetchAll: (request: any) =>
-    axios.get(url + "/store"),
+   fetchAll: () =>
+    axios.get(url ),
 
    fetchById: (id: number) =>
     axios.get(url + id),

@@ -1,8 +1,10 @@
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
-import thunk from "redux-thunk";
+import { thunk } from 'redux-thunk';
 import { connectRouter, routerMiddleware } from "connected-react-router";
 import { History } from "history";
 import { AllStates, reducers } from ".";
+import { StoreEnhancer } from 'redux';
+
 
 export default function configureStore(
     history: History,
@@ -13,11 +15,11 @@ export default function configureStore(
         ...reducers,
         router: connectRouter(history),
     });
-    const enhancers = [];
-    const windowIfDefined =
-    typeof window === "undefined" ? null : (window as any);
-  if (windowIfDefined && windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__) {
-    enhancers.push(windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__());}
+    const enhancers: StoreEnhancer[] = [];
+    const windowIfDefined = typeof window === "undefined" ? null : (window as any);
+    if (typeof windowIfDefined !== 'undefined' && typeof windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__ === 'function') {
+        enhancers.push(windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__() as StoreEnhancer);
+      }
     return createStore(
         rootReducer,
         //@ts-ignore
