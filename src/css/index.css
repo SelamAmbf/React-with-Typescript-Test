@@ -2,7 +2,7 @@ body {
   background-color: #ffffff;
 }
 
-#storeName, #country, #city, #location, #area {
+#storeName, #country, #city, #location, #description {
   padding: 5px;
   border: #fab700 1px solid;
   border-radius: 4px;

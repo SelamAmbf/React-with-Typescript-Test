@@ -93,22 +93,21 @@ export const fetchAll =
       });
   };
 
-// export const Delete =
-//   (id: any, onSuccess: any, onDeleteerror: any) =>
-//   (useAuthDispatch: Dispatch<ACTION_STORE>) => {
-//     storeApi()
-//       .delete(id)
-//       .then((response) => {
-//         console.log(response);
-//         useAuthDispatch({
-//           type: STORE_ActionType.DELETE_STORE,
-//           payload: [id],
-//         });
-//         onSuccess();
-//       })
-//       .catch((err: any) => {
-//         return onDeleteerror(err.message);
-//       });
-//   };
-
-
+export const Delete =
+  (id: any, onSuccess: any, onDeleteerror: any) =>
+  (AuthDispatch: Dispatch<ACTION_STORE>) => {
+    storeApi()
+      .delete(id)
+      .then((response) => {
+        console.log(response);
+        const data = response.data
+        AuthDispatch({
+          type: STORE_ActionType.DELETE_STORE,
+          payload: [id],
+        });
+        onSuccess();
+      })
+      .catch((err: any) => {
+        return onDeleteerror(err.message);
+      });
+  };

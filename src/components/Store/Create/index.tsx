@@ -4,7 +4,10 @@ import * as actionCreators from "../../../state/action Creator/storeAction";
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import "../../../css/index.css"
+import { Card } from "antd";
+import { CloseCircleOutlined } from "@ant-design/icons";
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 interface STORES {
     id: number;
     storeName: string;
@@ -106,49 +109,79 @@ const CreateStore = ({...props}) => {
     
         
   return (
+    <Card
+        title={viewMode === "new" ? "Create Store" : "Update Store"}
+        extra={
+          <a onClick={props.closeedit}>
+            <CloseCircleOutlined translate={undefined} />
+          </a>
+        }
+      >
     <form onSubmit={formik.handleSubmit}>
-      <div>
-        <label>Store Name</label>
-        <input type="text" id="storeName"  {...formik.getFieldProps('storeName')} placeholder="Store Name" />
-        {formik.touched.storeName && typeof formik.errors.storeName === 'string' && (
-        <div className="error">{formik.errors.storeName}</div>
-        )}
-      </div>
+    <TextField 
+      id="storeName"
+      label="Store Name"
+      multiline
+      {...formik.getFieldProps("storeName")}
+      helperText={
+        formik.touched.storeName &&
+        formik.errors.storeName
+      ? String(formik.errors.storeName)
+      : ""
+      }
+      />
+      <TextField 
+      id="description"
+      label="Store Description"
+      multiline
+      {...formik.getFieldProps("storeDescription")}
+      helperText={
+        formik.touched.storeDescription &&
+        formik.errors.storeDescription
+      ? String(formik.errors.storeDescription)
+      : ""
+      }
+      />
+      <TextField 
+      id="country"
+      label="Store Country"
+      multiline
+      {...formik.getFieldProps("storeCountry")}
+      helperText={
+        formik.touched.storeCountry &&
+        formik.errors.storeCountry
+      ? String(formik.errors.storeCountry)
+      : ""
+      }
+      />
+      <TextField 
+      id="city"
+      label="Store City"
+      multiline
+      {...formik.getFieldProps("storeCity")}
+      helperText={
+        formik.touched.storeCity &&
+        formik.errors.storeCity
+      ? String(formik.errors.storeCity)
+      : ""
+      }
+      />
       
-      <div>
-        <label>Store Description</label>
-<input type="text"  id="description" {...formik.getFieldProps('storeDescription')} placeholder="Store Description" />
-        {formik.touched.storeDescription && typeof formik.errors.storeDescription === 'string' && (
-        <div className="error">{formik.errors.storeDescription}</div>
-        )}
-      </div>
-      
-      <div>
-        <label>Store Country</label>
-        <input type="text"  id="country" {...formik.getFieldProps('storeCountry')} placeholder="Store Country" />
-        {formik.touched.storeCountry && typeof formik.errors.storeCountry === 'string' && (
-        <div className="error">{formik.errors.storeCountry}</div>
-        )}
-      </div>
-      
-      <div>
-        <label>Store City</label>
-        <input type="text"  id="city" {...formik.getFieldProps('storeCity')} placeholder="Store City" />
-        {formik.touched.storeCity && typeof formik.errors.storeCity === 'string' && (
-        <div className="error">{formik.errors.storeCity}</div>
-        )}
-      </div>
-      
-      <div>
-        <label>Store Location</label>
-        <input type="text" id="location" {...formik.getFieldProps('storeLocation')} placeholder="Store Location" />
-        {formik.touched.storeLocation && typeof formik.errors.storeLocation === 'string' && (
-        <div className="error">{formik.errors.storeLocation}</div>
-        )}
-      </div>
+      <TextField 
+      id="city"
+      label="Store Location"
+      multiline
+      {...formik.getFieldProps("storeLocation")}
+      helperText={
+        formik.touched.storeLocation &&
+        formik.errors.storeLocation
+      ? String(formik.errors.storeLocation)
+      : ""
+      }
+      />
       <Button type="submit" id="button" variant="contained" color="success">
       Submit</Button>
-    </form>
+    </form>  </Card>
   );
 };
 const mapStateToProps = (state: any) => ({
@@ -158,10 +191,8 @@ const mapStateToProps = (state: any) => ({
   const mapActionsToProps = {
     createStore: actionCreators.create,
     
+    
   };
 
   
-  export default connect(
-    mapStateToProps,
-    mapActionsToProps
-  )(CreateStore as any);
+  export default connect( mapStateToProps, mapActionsToProps )(CreateStore as any);

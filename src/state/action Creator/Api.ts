@@ -10,7 +10,7 @@ export const storeApi = (url: string = appUrl + "store") => {
     axios.get(url ),
 
    fetchById: (id: number) =>
-    axios.get(url + id),
+    axios.get(url + "/" + id),
 
     update: (id: number, updatedRecord: STORE_STATE) =>
       axios.put(url + "/" + id, updatedRecord),

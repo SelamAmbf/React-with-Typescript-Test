@@ -50,6 +50,7 @@ const initialFieldValues: STORES = {
 };
 const drawerWidth = 240;
 
+
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -139,11 +140,31 @@ const StoreView = ({ ...props }) => {
   const [isLoading, setIsLoading] = useState(false);
     const [viewMode, setViewMode] = useState("list");
     const [selectedStore, setselectedStore] = useState();
+    const [recordForEdit, setRecordForEdit] = useState({});
+    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+  const onSelectChange = (newSelectedRowKeys: any[], selectedRows: any[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+const rowSelection = {
+  selectedRowKeys,
+  onChange: onSelectChange,
+};
+
     // const [request, setRequest] = useState<CollectionQuery>({
     //   pageNumber: 1,
     //   pageSize: 5,
     //   filters: [],
     // });
+    const [notify, setNotify] = useState({
+      isOpen: false,
+      message: "",
+      type: "",
+    });
+    const [confirmDialog, setConfirmDialog] = useState({
+      isOpen: false,
+      title: "",
+      subTitle: "",
+    });
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
   
@@ -160,6 +181,37 @@ const StoreView = ({ ...props }) => {
   
     const onFetchAllError = () => {
       setIsLoading(false);
+    };
+    const DeleteSuccess = () => {
+      setSelectedRowKeys([]);
+      setIsLoading(false);
+     
+    };
+    const DeleteError = () => {
+      setIsLoading(false);
+      setNotify({
+        isOpen: true,
+        message:
+          " Failure Alert:-Proposal Type has NOT been successfully Deleted. Something's wrong!",
+        type: "error",
+      });
+    };
+    const handleDeletes = async (id: any) => {
+      setConfirmDialog({
+        ...confirmDialog,
+        isOpen: false,
+      });
+      try {
+
+        props.deleteStore(
+          id,
+          DeleteSuccess,
+          DeleteError
+        );
+      } catch (error) {
+        console.error(error);
+      }
+  
     };
     useEffect(() => {
       setIsLoading(true);
@@ -215,11 +267,10 @@ const StoreView = ({ ...props }) => {
                       variant="contained"
                       color="success"
                       startIcon={<DeleteOutlineTwoToneIcon />}
-                      onClick={() => {
-                        setViewMode("delete");
-                      } }
+                      onClick={() => handleDeletes(record.id)}
                     >
                     </Button>
+
                     <Button
                       variant="contained"
                       color="success"
@@ -234,6 +285,7 @@ const StoreView = ({ ...props }) => {
                       color="success"
                       startIcon={<VisibilityTwoToneIcon />}
                       onClick={() => {
+                        setselectedStore(record);
                         setViewMode("detail");
                       } }
                     >
@@ -308,6 +360,7 @@ const StoreView = ({ ...props }) => {
              
               {viewMode === "list" && (
                     <Table
+                      rowKey={(obj) => obj.id}
                       size="small"
                       dataSource={dataSource}
                       columns={columnsList} />
@@ -334,9 +387,10 @@ const StoreView = ({ ...props }) => {
                 <div style={{ width: "100%" }}>
                   <DetailStore
                     //@ts-ignore
+                    
                     closeedit={() => setViewMode("list")}
                     viewMode={viewMode}
-                    selectedProposalType={selectedStore}
+                    selectedStore={selectedStore}
                   />
                 </div>
               )}
@@ -353,15 +407,11 @@ const StoreView = ({ ...props }) => {
                       Create
                     </Button>
                     </div>
-               
-                
               )}
             </Grid>
             </Typography>
           </Box>
-        </Box><div className="appcontainer">
-            
-          </div></>
+        </Box></>
     );
   };
     
@@ -370,7 +420,7 @@ const StoreView = ({ ...props }) => {
     });
     
     const mapActionsToProps = {
-      //deleteStore: actionCreators.Delete,
+      deleteStore: actionCreators.Delete,
       fetchAll: actionCreators.fetchAll,
     };
     export default connect(mapStateToProps, mapActionsToProps)(StoreView as any);
