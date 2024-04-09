@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import * as actionCreators from "../../../state/action Creator/storeAction";
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import CreateStore from "../Create";
-import { Button, Card, Grid, Paper, SvgIcon } from "@mui/material";
-import { Space, Table } from 'antd';
+import { Button, Card, Grid, Paper, Stack, SvgIcon } from "@mui/material";
+import { Input, Space, Table } from 'antd';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
 import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
@@ -31,6 +31,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { stores } from '../../../state/actions/actionStore';
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  integrity="sha384-..."
+  crossOrigin="anonymous"
+/>
 interface STORES {
     id: number;
     storeName: string;
@@ -48,6 +56,12 @@ const initialFieldValues: STORES = {
         storeLocation: "",
         storeCity: "",
 };
+ interface CollectionQuery {
+  search?: string;
+  pageNumber?: number;
+  pageSize?: number;
+  
+}
 const drawerWidth = 240;
 
 
@@ -141,15 +155,31 @@ const StoreView = ({ ...props }) => {
     const [viewMode, setViewMode] = useState("list");
     const [selectedStore, setselectedStore] = useState();
     const [recordForEdit, setRecordForEdit] = useState({});
+    const [pageSize, setPageSize] = useState(10);
+    const [pageNumber, setPageNumber] = useState(5);
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
   const onSelectChange = (newSelectedRowKeys: any[], selectedRows: any[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
+  const [request, setRequest] = useState<CollectionQuery>({
+    pageNumber: 1,
+    pageSize: 5,
+  });
 const rowSelection = {
   selectedRowKeys,
   onChange: onSelectChange,
 };
+const onSearch = (query: string) => {
+  setRequest((prev) => {
+    return { ...prev, search: query };
+  });
+};
 
+const onPagination = (pageNumber: number, pageSize: number) => {
+  setRequest((prev) => {
+    return { ...prev, pageNumber: pageNumber, pageSize: pageSize };
+  });
+};
     // const [request, setRequest] = useState<CollectionQuery>({
     //   pageNumber: 1,
     //   pageSize: 5,
@@ -196,13 +226,14 @@ const rowSelection = {
         type: "error",
       });
     };
+
+ 
     const handleDeletes = async (id: any) => {
       setConfirmDialog({
         ...confirmDialog,
         isOpen: false,
       });
       try {
-
         props.deleteStore(
           id,
           DeleteSuccess,
@@ -213,10 +244,11 @@ const rowSelection = {
       }
   
     };
+
     useEffect(() => {
       setIsLoading(true);
-      props.fetchAll();
-    },);
+      props.fetchAll(onFetchAllSuccess, onFetchAllError, request);
+    }, [request]);
     console.log("success")
     console.log(props.storestates)
     const dataSource: any[] = props.storestates;
@@ -262,10 +294,10 @@ const rowSelection = {
         key: "action",
         render: (record: any) => {
           return (
-          <div>
+            <Stack spacing={1} direction="row">
               <Button
                       variant="contained"
-                      color="success"
+                      color="error"
                       startIcon={<DeleteOutlineTwoToneIcon />}
                       onClick={() => handleDeletes(record.id)}
                     >
@@ -290,12 +322,14 @@ const rowSelection = {
                       } }
                     >
                     </Button>
-                    </div>
+
+                      </Stack>
           );
       },
     },
     ];
       return (
+        
         <><Box sx={{ display: 'flex' }}>
           <CssBaseline />
           <AppBar position="fixed" open={open}>
@@ -357,14 +391,36 @@ const rowSelection = {
             </Typography>
             <Typography>
             <Grid container spacing={0}>
-             
-              {viewMode === "list" && (
-                    <Table
-                      rowKey={(obj) => obj.id}
-                      size="small"
-                      dataSource={dataSource}
-                      columns={columnsList} />
-              )}
+
+            {viewMode === "list" && (
+              <div>
+                          <Input
+                            placeholder="input search text"
+                            addonAfter="search"
+                            onKeyUp={(event: any) =>
+                              onSearch(event.target.value)
+                            }
+                          />
+                  <Table
+                    rowKey={(obj) => obj.id}
+                    size="small"
+                    dataSource={dataSource}
+                    columns={columnsList}
+                    pagination={{
+                      pageSize: pageSize,
+                      total: props.total,
+                      onChange: (pageNumber: any, pageSize: any) => {
+                        setPageNumber(pageNumber);
+                        setPageSize(pageSize);
+                        onPagination(pageNumber, pageSize);
+                      },
+                      defaultPageSize: 5,
+                    }}
+                    rowSelection={rowSelection}
+                  />
+                </div>
+            )}
+              
               {viewMode === "new" && (
                 <div style={{ width: "100%" }}>
                   <CreateStore

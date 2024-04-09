@@ -45,15 +45,20 @@ export const create =(data: STORE_STATE, onSucess: any, onCreateError: any) =>
     });
 };
 export const fetchAll =
-  () => (useAuthDispatch: Dispatch<ACTION_STORE>) => {
+(onSuccess: any, onFetchAllError: any, request: any) => 
+(useAuthDispatch: Dispatch<ACTION_STORE>) => {
     storeApi()
-      .fetchAll()
+      .fetchAll(request)
       .then((response) => {
         const data = response.data
         useAuthDispatch({
           type: STORE_ActionType.VIEW_STORE,
           payload: [data],
         });
+        onSuccess();
+      })
+      .catch((err: any) => {
+        return onFetchAllError(err.message);
       });
   };
   export const fetchById =

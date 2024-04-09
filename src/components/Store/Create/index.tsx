@@ -8,6 +8,7 @@ import { Card } from "antd";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
 interface STORES {
     id: number;
     storeName: string;
@@ -179,8 +180,43 @@ const CreateStore = ({...props}) => {
       : ""
       }
       />
-      <Button type="submit" id="button" variant="contained" color="success">
-      Submit</Button>
+      {viewMode === "new" && (
+                <>
+                
+                <Stack spacing={2} direction="row">
+                <Button type="submit" id="button" variant="contained" color="success">
+                Submit</Button>
+                <Button id="button" variant="contained" color="error" onClick={() => {
+                  formik.resetForm({ values: initialFieldValues, }); }}>
+                Reset</Button>
+                  </Stack>
+                </>
+                
+              )}
+              {viewMode === "edit" && (
+                <> <Stack spacing={2} direction="row">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                  >
+                    Update
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      formik.resetForm({
+                        values: initialFieldValues,
+                      });
+                    }}
+                  >
+                    Reset
+                  </Button> </Stack>
+                </>
+              )}
+     
     </form>  </Card>
   );
 };
@@ -190,8 +226,7 @@ const mapStateToProps = (state: any) => ({
   
   const mapActionsToProps = {
     createStore: actionCreators.create,
-    
-    
+    updateStore: actionCreators.update,
   };
 
   

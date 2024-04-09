@@ -6,7 +6,7 @@ export const storeApi = (url: string = appUrl + "store") => {
    create: ( newStore: STORE_STATE) =>
     axios.post(url , newStore),
 
-   fetchAll: () =>
+   fetchAll: (request: any) =>
     axios.get(url ),
 
    fetchById: (id: number) =>

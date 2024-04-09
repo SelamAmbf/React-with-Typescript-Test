@@ -3,7 +3,7 @@ import { ACTION_STORE, STORE_STATE } from "../actions/actionStore"
 
 const initialState = {
     storestates: [],
-    //total:0
+    total:0
 };
 
 export const STORE_REDUCER = (
@@ -26,8 +26,26 @@ export const STORE_REDUCER = (
                 
                   ...state,
                   storestates: action.payload[0],
-                  //total:action.payload[1]
+                  total:action.payload[1]
                 };
+        case STORE_ActionType.UPDATE_STORE:
+            return {
+                 ...state,
+                 storestates: state.storestates.map((store) =>
+                {//@ts-ignore
+                    return store.id == action.payload[1].id ? action.payload[1] : store;
+                }
+                ),
+                };
+        case STORE_ActionType.DELETE_STORE:
+                return {
+                    ...state,
+                    storestates: state.storestates.filter(
+                        (
+                            store //@ts-ignore
+                        ) => store.id != action.payload
+                      ),
+                    };
         default:
             return state;
                 
