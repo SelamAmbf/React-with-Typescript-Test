@@ -11,6 +11,8 @@ import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
 import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 import DetailStore from "../Detail";
+import { useNavigate } from "react-router-dom";
+
 
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -32,7 +34,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { stores } from '../../../state/actions/actionStore';
+import { CollectionQuery } from '../../../shared/collection-query/collection.model';
 <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -56,12 +58,6 @@ const initialFieldValues: STORES = {
         storeLocation: "",
         storeCity: "",
 };
- interface CollectionQuery {
-  search?: string;
-  pageNumber?: number;
-  pageSize?: number;
-  
-}
 const drawerWidth = 240;
 
 
@@ -154,7 +150,6 @@ const StoreView = ({ ...props }) => {
   const [isLoading, setIsLoading] = useState(false);
     const [viewMode, setViewMode] = useState("list");
     const [selectedStore, setselectedStore] = useState();
-    const [recordForEdit, setRecordForEdit] = useState({});
     const [pageSize, setPageSize] = useState(10);
     const [pageNumber, setPageNumber] = useState(5);
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
@@ -164,6 +159,7 @@ const StoreView = ({ ...props }) => {
   const [request, setRequest] = useState<CollectionQuery>({
     pageNumber: 1,
     pageSize: 5,
+    filters: [],
   });
 const rowSelection = {
   selectedRowKeys,
@@ -244,7 +240,13 @@ const onPagination = (pageNumber: number, pageSize: number) => {
       }
   
     };
-
+    const navigate = useNavigate();
+    const handleStoreViewClick = () => {
+        navigate("/");
+      };
+      const handleProductViewClick = () => {
+        navigate("/viewProduct");
+      };
     useEffect(() => {
       setIsLoading(true);
       props.fetchAll(onFetchAllSuccess, onFetchAllError, request);
@@ -361,6 +363,32 @@ const onPagination = (pageNumber: number, pageSize: number) => {
             <List>
               {['Stores'].map((text, index) => (
                 <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                  <ListItem button onClick={handleStoreViewClick}></ListItem>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+            <List>
+              {['Products'].map((text, index) => (
+                <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                  <ListItem button onClick={handleProductViewClick}></ListItem>
                   <ListItemButton
                     sx={{
                       minHeight: 48,

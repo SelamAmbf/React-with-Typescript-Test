@@ -9,6 +9,7 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import Notification from "../../../unicontrols/Notification";
 interface STORES {
     id: number;
     storeName: string;
@@ -43,14 +44,7 @@ const CreateStore = ({...props}) => {
         }
     },[props.viewMode,props.selectedStore]);
     
-      const stringRegExp = /^[a-zA-Z_&-_ ]*$/;
-      const validationSchema = Yup.object().shape({
-        storeName: Yup.string().required("Store name is required").matches(stringRegExp, "Please insert the correct input"),
-        storeDescription: Yup.string().required('Store description is required').matches(stringRegExp, "Please insert the correct input"),
-        storeCountry: Yup.string().required('Store country is required').matches(stringRegExp, "Please insert the correct input"),
-        storeCity: Yup.string().required('Store city is required').matches(stringRegExp, "Please insert the correct input"),
-        storeLocation: Yup.string().required('Store location is required').matches(stringRegExp, "Please insert the correct input"),
-    });
+     
     const [notify, setNotify] = useState({
         isOpen: false,
         message: "",
@@ -90,8 +84,16 @@ const CreateStore = ({...props}) => {
           type: "error",
         });
       };
+      const stringRegExp = /^[a-zA-Z_&-_ ]*$/;
+      const validationSchema = Yup.object().shape({
+        storeName: Yup.string().required("Store name is required").matches(stringRegExp, "Please insert the correct input"),
+        storeDescription: Yup.string().required('Store description is required').matches(stringRegExp, "Please insert the correct input"),
+        storeCountry: Yup.string().required('Store country is required').matches(stringRegExp, "Please insert the correct input"),
+        storeCity: Yup.string().required('Store city is required').matches(stringRegExp, "Please insert the correct input"),
+        storeLocation: Yup.string().required('Store location is required').matches(stringRegExp, "Please insert the correct input"),
+    });
       const formik = useFormik({
-        initialValues: selectedStore || initialFieldValues,
+        initialValues: selectedStore,
         onSubmit: (values) => {
           console.log("Form submitted with values:", values);
           console.log("Current viewMode:", viewMode);
@@ -110,7 +112,7 @@ const CreateStore = ({...props}) => {
     
         
   return (
-    <Card
+   <div> <Card
         title={viewMode === "new" ? "Create Store" : "Update Store"}
         extra={
           <a onClick={props.closeedit}>
@@ -180,7 +182,8 @@ const CreateStore = ({...props}) => {
       : ""
       }
       />
-      {viewMode === "new" && (
+      
+            {viewMode === "new" && (
                 <>
                 
                 <Stack spacing={2} direction="row">
@@ -217,7 +220,7 @@ const CreateStore = ({...props}) => {
                 </>
               )}
      
-    </form>  </Card>
+    </form>  </Card> <Notification notify={notify} setNotify={setNotify} /></div>
   );
 };
 const mapStateToProps = (state: any) => ({
