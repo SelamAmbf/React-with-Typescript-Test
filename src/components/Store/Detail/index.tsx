@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react";
+import React, { useState} from "react";
 import { Grid, TextField} from "@mui/material";
 import { connect } from "react-redux";
 import { Card } from "antd";
@@ -10,7 +10,7 @@ const DetailStore = ({ ...props }) => {
   );
   console.log(selectedStore)
   console.log("stores")
-  return (
+  return ( 
     <div className="insidefrontcontainer">
       <Card
         title="Detail for Store"

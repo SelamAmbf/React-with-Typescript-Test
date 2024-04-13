@@ -50,15 +50,23 @@ const CreateStore = ({...props}) => {
         message: "",
         type: "",
       });
+      const onFetchAllSuccess = () => {
+        console.log("fetch")
+      };
+    
+      const onFetchAllError = () => { 
+        console.log("error")
+      };
       const onCreateSuccess = () => {
         setNotify({
           isOpen: true,
-          message: "Success Alert:- Proposal Type has been successfully Created .",
+          message: "Success Alert:- Store has been successfully Created .",
           type: "success",
         });
         setTimeout(()=>{
           props.closeedit();
        },2000)
+       props.fetchStore(onFetchAllSuccess, onFetchAllError);
       };
       const onCreateError = (action: any) => {
         setNotify({
@@ -70,12 +78,13 @@ const CreateStore = ({...props}) => {
       const onUpdateSuccess = () => {
         setNotify({
           isOpen: true,
-          message: "Success Alert:- Proposal Type has been successfully Updated !",
+          message: "Success Alert:- Store has been successfully Updated !",
           type: "success",
         });
         setTimeout(()=>{
           props.closeedit();
        },2000)
+       props.fetchStore(onFetchAllSuccess, onFetchAllError);
       };
       const onUpdateError = (action: any) => {
         setNotify({
@@ -94,13 +103,13 @@ const CreateStore = ({...props}) => {
     });
       const formik = useFormik({
         initialValues: selectedStore,
-        onSubmit: (values) => {
+        onSubmit:  (values) => {
           console.log("Form submitted with values:", values);
           console.log("Current viewMode:", viewMode);
           if (props.viewMode === "new")
-            props.createStore(values, onCreateSuccess, onCreateError);
+           props.createStore(values, onCreateSuccess, onCreateError);
           else
-              props.updateStore(
+            props.updateStore(
                 selectedStore.id,
                 values,
                 onUpdateSuccess,
@@ -109,7 +118,7 @@ const CreateStore = ({...props}) => {
         },
          validationSchema: validationSchema,
       });
-    
+      
         
   return (
    <div> <Card
@@ -230,6 +239,7 @@ const mapStateToProps = (state: any) => ({
   const mapActionsToProps = {
     createStore: actionCreators.create,
     updateStore: actionCreators.update,
+    fetchStore : actionCreators.fetchAlls
   };
 
   

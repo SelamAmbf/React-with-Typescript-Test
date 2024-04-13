@@ -3,7 +3,7 @@ import { ACTION_STORE, STORE_STATE } from "../actions/actionStore"
 
 const initialState = {
     storestates: [],
-    //total:0
+  
 };
 
 export const STORE_REDUCER = (
@@ -26,7 +26,7 @@ export const STORE_REDUCER = (
                 
                   ...state,
                   storestates: action.payload[0],
-                  //total:action.payload[1]
+                  
                 };
         case STORE_ActionType.UPDATE_STORE:
             return {

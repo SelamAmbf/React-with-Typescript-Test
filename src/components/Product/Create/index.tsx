@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
 import * as actionCreators from "../../../state/action Creator/productAction";
+import * as actionStore from "../../../state/action Creator/storeAction";
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import "../../../css/index.css"
@@ -11,6 +12,14 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Notification from "../../../unicontrols/Notification";
 import moment from "moment";
+
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import MenuItem from '@mui/material/MenuItem';
+
 interface PRODUCTS {
     id: number;
     storeName: string;
@@ -39,6 +48,20 @@ const CreateProduct = ({...props}) => {
     const [selectedProduct, setselectedProduct] = useState<any>(
       props.selectedProduct
     );
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+   
+    const onFetchAllSuccess = () => {
+      setIsLoading(false);
+    };
+  
+    const onFetchAllError = () => { 
+      setIsLoading(false);
+    };
+    useEffect(() => {
+      props.fetchAlls(onFetchAllSuccess, onFetchAllError);
+    });
+    
     useEffect(() =>{
         setViewMode(props.viewMode);
         setselectedProduct(props.selectedProduct);
@@ -64,6 +87,7 @@ const CreateProduct = ({...props}) => {
         setTimeout(()=>{
           props.closeedit();
        },2000)
+       props.fetchProduct(onFetchAllSuccess, onFetchAllError);
       };
       const onCreateError = (action: any) => {
         setNotify({
@@ -81,6 +105,7 @@ const CreateProduct = ({...props}) => {
         setTimeout(()=>{
           props.closeedit();
        },2000)
+       props.fetchProduct(onFetchAllSuccess, onFetchAllError);
       };
       const onUpdateError = (action: any) => {
         setNotify({
@@ -98,16 +123,17 @@ const CreateProduct = ({...props}) => {
         productSerialNo: Yup.string().required('Product Serial Number is required').matches(numberRegExp, "Please insert the correct input(only numbers allowed)"),
         shelfNo: Yup.string().required('Product Shelf Number is required').matches(numberRegExp, "Please insert the correct input"),
         shelfName: Yup.string().required("Shelf Name is required").matches(stringRegExp, "Please insert the correct input"),
+        expiryDate: Yup.date().min(new Date(), "Expiry Date must be greater than the current date").required("Expiry Date is required")
     });
       const formik = useFormik({
         initialValues: selectedProduct,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
           console.log("Form submitted with values:", values);
           console.log("Current viewMode:", viewMode);
           if (props.viewMode === "new")
             props.createProduct(values, onCreateSuccess, onCreateError);
           else
-              props.updateStore(
+              props.updateProduct(
                 selectedProduct.id,
                 values,
                 onUpdateSuccess,
@@ -116,7 +142,12 @@ const CreateProduct = ({...props}) => {
         },
          validationSchema: validationSchema,
       });
-    
+      const [value, setValue] = useState(dayjs());
+
+      const handleDateChange = (newValue: any) => {
+          setValue(newValue);
+          formik.setFieldValue("expiryDate", newValue.format("YYYY-MM-DD"));
+  };
         
   return (
    <div> <Card
@@ -129,6 +160,7 @@ const CreateProduct = ({...props}) => {
       >
     <form onSubmit={formik.handleSubmit}>
     <TextField 
+      select
       id="storeName"
       label="Store Name"
       multiline
@@ -139,7 +171,13 @@ const CreateProduct = ({...props}) => {
       ? String(formik.errors.storeName)
       : ""
       }
-      />
+      >{props.storestates.map((item: any) => (
+        <MenuItem key={item.storeName} value={item.storeName}>
+          {item.storeName}
+        </MenuItem>))}
+      </TextField>
+         
+      
       <TextField 
       id="productName"
       label="Product Name"
@@ -202,20 +240,23 @@ const CreateProduct = ({...props}) => {
       }
       
       />
-      <TextField 
-      id="expiryDate"
-      label="Product Expire Date"
-      multiline
-      {...formik.getFieldProps("expiryDate")}
-      helperText={
-        formik.touched.expiryDate &&
-        formik.errors.expiryDate
-      ? String(formik.errors.expiryDate)
-      : ""
-      }
-      
-      />
-      
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={['DatePicker', 'DatePicker']}>
+          <div>
+            <DatePicker
+            label="Expire Date"
+            value={value}
+            onChange={handleDateChange}
+            name="expiryDate"
+            />
+            {formik.touched.expiryDate && formik.errors.expiryDate && (
+            <div style={{ color: 'red' }}>
+              {String(formik.errors.expiryDate)}
+            </div>
+              )}
+          </div>
+        </DemoContainer>
+      </LocalizationProvider>
             {viewMode === "new" && (
                 <>
                 
@@ -258,10 +299,13 @@ const CreateProduct = ({...props}) => {
 };
 const mapStateToProps = (state: any) => ({
     productstate: state.PRODUCT_REDUCER.productstate,
+    storestates: state.STORE_REDUCER.storestates,
   });
   
   const mapActionsToProps = {
+    fetchAlls: actionStore.fetchAlls,
     createProduct: actionCreators.create,
     updateProduct: actionCreators.update,
+    fetchProduct : actionCreators.fetchAlls
   };
 export default connect( mapStateToProps, mapActionsToProps )(CreateProduct as any);

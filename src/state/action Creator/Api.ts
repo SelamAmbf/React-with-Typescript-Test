@@ -12,10 +12,8 @@ export const storeApi = (url: string = appUrl + "store") => {
     axios.get(url, {
       params: collectionQueryBuilder(request),
     }),
-
-   fetchById: (id: number) =>
-    axios.get(url + "/" + id),
-    
+    fetchAlls: () =>
+    axios.get(url),
     update: (id: number, updatedRecord: STORE_STATE) =>
       axios.put(url + "/" + id, updatedRecord),
     delete: (id: number) =>
@@ -31,13 +29,11 @@ export const productApi = (url: string = appUrl + "product") => {
   axios.get(url, {
     params: collectionQueryBuilder(request),
   }),
-
- fetchById: (id: number) =>
-  axios.get(url + "/" + id),
-  
   update: (id: number, updatedRecord: PRODUCT_STATE) =>
     axios.put(url + "/" + id, updatedRecord),
   delete: (id: number) =>
     axios.delete(url + "/" + id),
+  fetchAlls: () =>
+    axios.get(url),
 };
 };

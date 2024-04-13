@@ -38,20 +38,21 @@ export const fetchAll =
         return onFetchAllError(err.message);
       });
   };
-  export const fetchById =
-  (id: any, onSuccess: any, onFetchByIderror: any) =>
-  (useAuthDispatch: Dispatch<ACTION_PRODUCT>) => {
-    productApi()
-      .fetchById(id)
+  export const fetchAlls =
+(onSuccess: any, onFetchAllError: any) => 
+async (useAuthDispatch: Dispatch<ACTION_PRODUCT>) => {
+  productApi()
+      .fetchAlls()
       .then((response) => {
+        const data = response.data
         useAuthDispatch({
-          type: PRODUCT_ActionType.SEARCH_PRODUCT,
-          payload: [id],
+          type: PRODUCT_ActionType.VIEW_PRODUCT,
+          payload: [data],
         });
         onSuccess();
       })
       .catch((err: any) => {
-        return onFetchByIderror(err.message);
+        return onFetchAllError(err.message);
       });
   };
   export const update =

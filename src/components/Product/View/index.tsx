@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from "react-redux";
 import * as actionCreators from "../../../state/action Creator/productAction";
-import * as Yup from "yup";
-import { useFormik } from 'formik';
 import CreateProduct from "../Create";
 import { Button, Card, Grid, Paper, Stack, SvgIcon } from "@mui/material";
 import { Input, Space, Table } from 'antd';
@@ -12,7 +10,6 @@ import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 import DetailProduct from "../Detail";
 import { useNavigate } from "react-router-dom";
-
 
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -33,7 +30,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Notification from "../../../unicontrols/Notification";
 import { CollectionQuery } from '../../../shared/collection-query/collection.model';
 import moment from 'moment';
 <link
@@ -162,6 +159,7 @@ const ProductView = ({ ...props }) => {
   const onSelectChange = (newSelectedRowKeys: any[], selectedRows: any[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
+ 
   const [request, setRequest] = useState<CollectionQuery>({
     pageNumber: 1,
     pageSize: 5,
@@ -212,6 +210,11 @@ const onPagination = (pageNumber: number, pageSize: number) => {
     const DeleteSuccess = () => {
       setSelectedRowKeys([]);
       setIsLoading(false);
+      setNotify({
+        isOpen: true,
+        message: "Product has been successfully Deleted .",
+        type: "error",
+      });
      
     };
     const DeleteError = () => {
@@ -243,6 +246,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
     };
     const navigate = useNavigate();
     const handleStoreViewClick = () => {
+      console.log("stores bar")
         navigate("/");
       };
       const handleProductViewClick = () => {
@@ -323,6 +327,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
                       color="success"
                       startIcon={<CreateTwoToneIcon />}
                       onClick={() => {
+                        setselectedProduct(record);
                         setViewMode("edit");
                       } }
                     >
@@ -362,7 +367,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" noWrap component="div">
-                Store
+                Product List
               </Typography>
             </Toolbar>
           </AppBar>
@@ -374,9 +379,9 @@ const onPagination = (pageNumber: number, pageSize: number) => {
             </DrawerHeader>
             <Divider />
             <List>
-              {['Stores'].map((text, index) => (
-                <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                  <ListItem button onClick={handleStoreViewClick}></ListItem>
+              {['Stores'].map((text) => (
+                <ListItem key={text} onClick={handleStoreViewClick} disablePadding sx={{ display: 'block' }}>
+                  
                   <ListItemButton
                     sx={{
                       minHeight: 48,
@@ -391,7 +396,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
                         justifyContent: 'center',
                       }}
                     >
-                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                      <MailIcon />
                     </ListItemIcon>
                     <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
@@ -400,8 +405,8 @@ const onPagination = (pageNumber: number, pageSize: number) => {
             </List>
             <List>
               {['Products'].map((text, index) => (
-                <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                  <ListItem button onClick={handleProductViewClick}></ListItem>
+                <ListItem key={text} onClick={handleProductViewClick}  disablePadding sx={{ display: 'block' }}>
+                  
                   <ListItemButton
                     sx={{
                       minHeight: 48,
@@ -416,7 +421,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
                         justifyContent: 'center',
                       }}
                     >
-                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <InboxIcon /> 
                     </ListItemIcon>
                     <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
@@ -508,7 +513,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
             </Grid>
             </Typography>
           </Box>
-        </Box></>
+        </Box><Notification notify={notify} setNotify={setNotify} /></>
     );
   };
     

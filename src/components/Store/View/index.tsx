@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import * as actionCreators from "../../../state/action Creator/storeAction";
-import * as Yup from "yup";
-import { useFormik } from 'formik';
 import CreateStore from "../Create";
-import { Button, Card, Grid, Paper, Stack, SvgIcon } from "@mui/material";
-import { Input, Space, Table } from 'antd';
+import { Button, Grid, Stack, SvgIcon } from "@mui/material";
+import { Input, Table } from 'antd';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
 import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 import DetailStore from "../Detail";
 import { useNavigate } from "react-router-dom";
-
+import Notification from "../../../unicontrols/Notification";
 
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -33,7 +31,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CollectionQuery } from '../../../shared/collection-query/collection.model';
 <link
   rel="stylesheet"
@@ -176,11 +173,6 @@ const onPagination = (pageNumber: number, pageSize: number) => {
     return { ...prev, pageNumber: pageNumber, pageSize: pageSize };
   });
 };
-    // const [request, setRequest] = useState<CollectionQuery>({
-    //   pageNumber: 1,
-    //   pageSize: 5,
-    //   filters: [],
-    // });
     const [notify, setNotify] = useState({
       isOpen: false,
       message: "",
@@ -211,6 +203,11 @@ const onPagination = (pageNumber: number, pageSize: number) => {
     const DeleteSuccess = () => {
       setSelectedRowKeys([]);
       setIsLoading(false);
+      setNotify({
+        isOpen: true,
+        message: "Store has been successfully Deleted .",
+        type: "error",
+      });
      
     };
     const DeleteError = () => {
@@ -247,8 +244,11 @@ const onPagination = (pageNumber: number, pageSize: number) => {
       const handleProductViewClick = () => {
         navigate("/viewProduct");
       };
+      
     useEffect(() => {
       setIsLoading(true);
+      console.log("isLoading");
+      console.log(isLoading);
       props.fetchAll(onFetchAllSuccess, onFetchAllError, request);
     }, [request]);
     console.log("success")
@@ -310,6 +310,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
                       color="success"
                       startIcon={<CreateTwoToneIcon />}
                       onClick={() => {
+                        setselectedStore(record);
                         setViewMode("edit");
                       } }
                     >
@@ -361,9 +362,9 @@ const onPagination = (pageNumber: number, pageSize: number) => {
             </DrawerHeader>
             <Divider />
             <List>
-              {['Stores'].map((text, index) => (
-                <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                  <ListItem button onClick={handleStoreViewClick}></ListItem>
+              {['Stores'].map((text) => (
+                <ListItem key={text} onClick={handleStoreViewClick} disablePadding sx={{ display: 'block' }}>
+                 
                   <ListItemButton
                     sx={{
                       minHeight: 48,
@@ -378,7 +379,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
                         justifyContent: 'center',
                       }}
                     >
-                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                       <MailIcon />
                     </ListItemIcon>
                     <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
@@ -386,9 +387,9 @@ const onPagination = (pageNumber: number, pageSize: number) => {
               ))}
             </List>
             <List>
-              {['Products'].map((text, index) => (
-                <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                  <ListItem button onClick={handleProductViewClick}></ListItem>
+              {['Products'].map((text) => (
+                <ListItem key={text} disablePadding onClick={handleProductViewClick} sx={{ display: 'block' }}>
+                 
                   <ListItemButton
                     sx={{
                       minHeight: 48,
@@ -403,7 +404,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
                         justifyContent: 'center',
                       }}
                     >
-                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                      <InboxIcon /> 
                     </ListItemIcon>
                     <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
@@ -430,7 +431,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
                             }
                           />
                   <Table
-                    rowKey={(obj) => obj.id}
+                    
                     size="small"
                     dataSource={dataSource}
                     columns={columnsList}
@@ -495,7 +496,7 @@ const onPagination = (pageNumber: number, pageSize: number) => {
             </Grid>
             </Typography>
           </Box>
-        </Box></>
+        </Box><Notification notify={notify} setNotify={setNotify} /></>
     );
   };
     
