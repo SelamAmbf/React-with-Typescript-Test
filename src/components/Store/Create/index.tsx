@@ -50,13 +50,6 @@ const CreateStore = ({...props}) => {
         message: "",
         type: "",
       });
-      const onFetchAllSuccess = () => {
-        console.log("fetch")
-      };
-    
-      const onFetchAllError = () => { 
-        console.log("error")
-      };
       const onCreateSuccess = () => {
         setNotify({
           isOpen: true,
@@ -66,7 +59,7 @@ const CreateStore = ({...props}) => {
         setTimeout(()=>{
           props.closeedit();
        },2000)
-       props.fetchStore(onFetchAllSuccess, onFetchAllError);
+      //  props.fetchStore(onFetchAllSuccess, onFetchAllError);
       };
       const onCreateError = (action: any) => {
         setNotify({
@@ -84,7 +77,7 @@ const CreateStore = ({...props}) => {
         setTimeout(()=>{
           props.closeedit();
        },2000)
-       props.fetchStore(onFetchAllSuccess, onFetchAllError);
+      //  props.fetchStore(onFetchAllSuccess, onFetchAllError);
       };
       const onUpdateError = (action: any) => {
         setNotify({
@@ -239,7 +232,6 @@ const mapStateToProps = (state: any) => ({
   const mapActionsToProps = {
     createStore: actionCreators.create,
     updateStore: actionCreators.update,
-    fetchStore : actionCreators.fetchAlls
   };
 
   

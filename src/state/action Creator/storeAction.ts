@@ -10,6 +10,9 @@ async (useADispatch: Dispatch<ACTION_STORE>) => {
             type: STORE_ActionType.ADD_STORE,
             payload: response.data,
         });
+        debugger;
+        const data = response.data;
+        debugger;
         onSucess();
     })
     .catch((err) =>{

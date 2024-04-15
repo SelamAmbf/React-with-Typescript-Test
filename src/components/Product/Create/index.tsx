@@ -87,7 +87,7 @@ const CreateProduct = ({...props}) => {
         setTimeout(()=>{
           props.closeedit();
        },2000)
-       props.fetchProduct(onFetchAllSuccess, onFetchAllError);
+      
       };
       const onCreateError = (action: any) => {
         setNotify({
@@ -105,7 +105,7 @@ const CreateProduct = ({...props}) => {
         setTimeout(()=>{
           props.closeedit();
        },2000)
-       props.fetchProduct(onFetchAllSuccess, onFetchAllError);
+      
       };
       const onUpdateError = (action: any) => {
         setNotify({
@@ -306,6 +306,5 @@ const mapStateToProps = (state: any) => ({
     fetchAlls: actionStore.fetchAlls,
     createProduct: actionCreators.create,
     updateProduct: actionCreators.update,
-    fetchProduct : actionCreators.fetchAlls
   };
 export default connect( mapStateToProps, mapActionsToProps )(CreateProduct as any);

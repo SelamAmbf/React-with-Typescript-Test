@@ -33,7 +33,7 @@ export const STORE_REDUCER = (
                  ...state,
                  storestates: state.storestates.map((store) =>
                 {//@ts-ignore
-                    return store.id == action.payload[1].id ? action.payload[1] : store;
+                    return store.id == action.payload[0] ? action.payload[1] : store;
                 }
                 ),
                 };
