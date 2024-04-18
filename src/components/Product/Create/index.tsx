@@ -50,7 +50,7 @@ const CreateProduct = ({...props}) => {
     );
     const [isLoading, setIsLoading] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-   
+    const [value, setValue] = useState();
     const onFetchAllSuccess = () => {
       setIsLoading(false);
     };
@@ -89,6 +89,10 @@ const CreateProduct = ({...props}) => {
        },2000)
       
       };
+      const handleReset = () => {
+        //@ts-ignore
+        setValue(null); // Reset expiryDate
+      };
       const onCreateError = (action: any) => {
         setNotify({
           isOpen: true,
@@ -116,7 +120,9 @@ const CreateProduct = ({...props}) => {
       };
       const stringRegExp = /^[a-zA-Z_&-_ ]*$/;
       const numberRegExp = /^[0-9]+$/;
+      
       const validationSchema = Yup.object().shape({
+        
         storeName: Yup.string().required("Store name is required").matches(stringRegExp, "Please insert the correct input"),
         productName: Yup.string().required('Product Name is required').matches(stringRegExp, "Please insert the correct input"),
         productDescription: Yup.string().required('Product Description is required').matches(stringRegExp, "Please insert the correct input"),
@@ -142,7 +148,7 @@ const CreateProduct = ({...props}) => {
         },
          validationSchema: validationSchema,
       });
-      const [value, setValue] = useState(dayjs());
+      // const [value, setValue] = useState(dayjs());
 
       const handleDateChange = (newValue: any) => {
           setValue(newValue);
@@ -160,6 +166,7 @@ const CreateProduct = ({...props}) => {
       >
     <form onSubmit={formik.handleSubmit}>
     <TextField 
+    
       select
       id="storeName"
       label="Store Name"
@@ -179,6 +186,8 @@ const CreateProduct = ({...props}) => {
          
       
       <TextField 
+      className={formik.touched.productName && formik.errors.productName ? "error-text" : ""}
+                
       id="productName"
       label="Product Name"
       multiline
@@ -263,8 +272,14 @@ const CreateProduct = ({...props}) => {
                 <Stack spacing={2} direction="row">
                 <Button type="submit" id="button" variant="contained" color="success">
                 Submit</Button>
-                <Button id="button" variant="contained" color="error" onClick={() => {
-                  formik.resetForm({ values: initialFieldValues, }); }}>
+                <Button id="button" variant="contained" color="error" onClick={async () => {
+                      await handleReset();
+                      formik.resetForm({
+                        values: {
+                          ...initialFieldValues,
+                        },
+                      });
+                    }}>
                 Reset</Button>
                   </Stack>
                 </>

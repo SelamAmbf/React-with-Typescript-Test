@@ -69,6 +69,6 @@
     "@types/history": "^5.0.0",
     "@types/jquery": "^3.5.29",
     "gulp-sass": "^5.1.0",
-    "sass": "^1.72.0"
+    "sass": "^1.75.0"
   }
 }
